@@ -26,6 +26,7 @@ public class ShowFile {
 		stageFileString = ListFiles(f);
 		Log.i(stageFileString);
 		
+		getSelectedFileString("文本.txt");
 		System.exit(0);
 	}
 
@@ -57,9 +58,9 @@ public class ShowFile {
 			br = new BufferedReader(new FileReader(f));
 			String rl="";
 			while((rl=br.readLine())!=null){
-				selectedString+=rl;
+				selectedString+=rl+"\r";
 			}
-			
+			Log.i(selectedString);
 			if(br!=null)br.close();
 		 } catch (IOException e) {
 			// TODO Auto-generated catch block

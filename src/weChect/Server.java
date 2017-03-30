@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.swing.JTextArea;
 
+import mySql.Log;
 import mySql.SelectQuery;
 
 public class Server implements Runnable{
@@ -17,6 +18,11 @@ public class Server implements Runnable{
 	private boolean connected;
 	SelectQuery sql=new SelectQuery();
 
+	public static void main(String[] args) {
+		 Server s = new Server(null, null);
+		 s.connect();
+	}
+	
 	Server(JTextArea taRec, JTextArea taSend) {
 		this.taRec = taRec;
 		this.taSend = taSend;
@@ -26,14 +32,14 @@ public class Server implements Runnable{
 		if (!connected) {
 			connected=true;
 			 new Thread(this).start();//
-			 
+			 Log.i("已建立连接");
 			new Thread() {
 				public void run() {
 					try {
 						ss = new ServerSocket(8888);
 						while (true) {
 							Socket s = ss.accept();
-							taRec.append("一个用户连接了" + "\n");
+							if(taRec!=null)taRec.append("一个用户连接了" + "\n");
 							
 							ServerXian sx;
 							socketList.add(sx=new ServerXian(s,sql));
@@ -65,7 +71,7 @@ public class Server implements Runnable{
 				ss=socketList.get(i);						
 				ss.send(str);
 			}
-			taSend.setText("");
+			if(taSend!=null)taSend.setText("");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -74,7 +80,7 @@ public class Server implements Runnable{
 	}
 
 	void send() {
-		send(taSend.getText());
+		if(taSend!=null)send(taSend.getText());
 	}
 	void sendAll(String str){
 		send(str);

@@ -35,7 +35,7 @@ public class ServerXian implements Runnable{
 			dis = new DataInputStream(s.getInputStream());
 			while(true){
 				if ((str = dis.readUTF()) != null)
-				taRec.append(str + "\n");
+				if(taRec!=null)taRec.append(str + "\n");
 				if(str.startsWith(ConsWhenConnecting.REQUEST_NEW_USER_ID)) {
 					int userId = sql.makeUserId();
 					
@@ -55,6 +55,10 @@ public class ServerXian implements Runnable{
 					User user=new User(Integer.parseInt(strArr[0]),null,score);
 				
 					sql.updateScore(user);
+				}	
+				else if(str.startsWith(ConsWhenConnecting.REQUEST_ONLINE_STAGE)) {
+					String stageString=ShowFile.getStageFileString();
+					send(ConsWhenConnecting.THIS_IS_ONLINE_STAGE+stageString);
 				}
 				else if(str.startsWith(ConsWhenConnecting.REQUEST_THIS_ONE_ONLINE_STAGE)) {
 					String strRes=str.substring(ConsWhenConnecting.REQUEST_THIS_ONE_ONLINE_STAGE.length());
