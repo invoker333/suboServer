@@ -45,9 +45,7 @@ public class ServerXian implements Runnable{
 					send(ConsWhenConnecting.THIS_IS_NEW_USER_ID+userId);
 				}
 				else if(str.startsWith(ConsWhenConnecting.REQUEST_PIMING_INFO)) {
-					String resStr=sql.getPaiming(20);
-					Log.i("serverLog+sql.getPaiming(20)"+resStr);
-					send(ConsWhenConnecting.THIS_IS_PAIMING+resStr);
+					sendPaimingInfo();
 				}	
 				else if(str.startsWith(ConsWhenConnecting.REQUEST_UPDATE_SCORE)) {
 					String[] strArr = (str.substring(ConsWhenConnecting.REQUEST_UPDATE_SCORE.length())).split(" ");
@@ -66,6 +64,12 @@ public class ServerXian implements Runnable{
 				}
 					
 				else if(str.startsWith(ConsWhenConnecting.REQUEST_UPDATE_NAME)) {
+					String[] strArr = (str.substring(ConsWhenConnecting.REQUEST_UPDATE_NAME.length())).split(" ");
+					int id=Integer.parseInt(strArr[0]);
+					String name=strArr[1];
+					User user=new User(id,name,-1);
+					sql.updateName(user);
+					sendPaimingInfo();
 				}	
 				
 			}
@@ -74,6 +78,12 @@ public class ServerXian implements Runnable{
 			closeStream();
 			e.printStackTrace();
 		}
+	}
+
+	private void sendPaimingInfo() {
+		String resStr=sql.getPaiming(20);
+		Log.i("serverLog+sql.getPaiming(20)"+resStr);
+		send(ConsWhenConnecting.THIS_IS_PAIMING+resStr);
 	}
 
 	public void send(String str) {

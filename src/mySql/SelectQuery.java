@@ -50,14 +50,15 @@ public class SelectQuery {
 		getAll();
 		User user = new User((int) (100 * Math.random()),
 				UserName.randomName(), (int) (100 * Math.random()));
-		insert(user);
+		insert(user);Log.i("insert test");
 		user = new User((int) (100 * Math.random()), UserName.randomName(),
 				(int) (100 * Math.random()));
 		updateName(user);
 		user = new User((int) (100 * Math.random()), UserName.randomName(),
 				(int) (100 * Math.random()));
-		updateScore(user);
-		getPaiming(5);
+		updateScore(user);Log.i("UpdateScore test");
+		getPaiming(20);
+		makeUserId();
 		// delete(0);
 	}
 
@@ -84,8 +85,7 @@ public class SelectQuery {
 	public static int updateScore(User student) {
 		Connection conn = getConnection();
 		int i = 0;
-		String sql = "update idAndName set userScore='"
-				+ student.getUserScore() + "' where userId='"
+		String sql = "update idAndName set userScore='"+ student.getUserScore() + "' where userId='"
 				+ student.getUserId() + "'";
 		PreparedStatement pstmt;
 		try {
@@ -100,7 +100,7 @@ public class SelectQuery {
 		return i;
 	}
 
-	private static int updateName(User student) {
+	public static int updateName(User student) {
 		Connection conn = getConnection();
 		int i = 0;
 		String sql = "update idAndName set userName='" + student.getUserName()
@@ -120,7 +120,7 @@ public class SelectQuery {
 
 	public static String getPaiming(int count){
 //		String sql="select top "+count+" *,rank() over(order by userScore desc) paiming from idAndName";
-		String sql="SELECT obj.userId, obj.userScore, CASE	WHEN @rowtotal = obj.userScore THEN @rownum WHEN @rowtotal := obj.userScore THEN   @rownum :=@rownum + 1 WHEN @rowtotal = 0 THEN @rownum :=@rownum + 1 END AS rownum FROM   (SELECT 	userId,	userScore	FROM	gameinfo_toms.idandname	ORDER BY	userScore DESC	) AS obj, (SELECT @rownum := 0 ,@rowtotal := NULL) r";
+		String sql="SELECT obj.userName, obj.userScore, CASE	WHEN @rowtotal = obj.userScore THEN @rownum WHEN @rowtotal := obj.userScore THEN   @rownum :=@rownum + 1 WHEN @rowtotal = 0 THEN @rownum :=@rownum + 1 END AS rownum FROM   (SELECT 	userName,	userScore	FROM	gameinfo_toms.idandname	ORDER BY	userScore DESC	) AS obj, (SELECT @rownum := 0 ,@rowtotal := NULL) r";
 		return get(sql);
 	}
 
@@ -152,7 +152,6 @@ public class SelectQuery {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		Log.i("serverLog+sql.getPaiming(20)" + resStr);
 		return resStr;
 
 	}
@@ -174,8 +173,18 @@ public class SelectQuery {
 		return i;
 	}
 
-	public int makeUserId() {
+	public static int makeUserId() {
 		// TODO Auto-generated method stub
-		return (int) (1000000000 * Math.random());
+		String sql="SELECT gameinfo_toms.idandname.userId FROM	gameinfo_toms.idandname ORDER BY	userId DESC";   
+		String res=get(sql);
+		Log.i("makeUserId"+res);
+		
+		int userId=Integer.parseInt(res.split(" ")[0])+1+(int)(10*Math.random());
+		final int million=999999999;
+		if(res.split(" ")[0].length()<(""+million).length()) {
+			userId=(int) (million*Math.random());
+		}
+		Log.i("realUserId"+userId);
+		return userId;
 	}
 }

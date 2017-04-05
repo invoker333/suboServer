@@ -59,7 +59,7 @@ public class Server implements Runnable{
 	public void run() {
 		JTextArea texRec = ServerWindow.textRec;
 		while(connected){
-			if(texRec!=null&&texRec.getText().length()>300)
+			if(texRec!=null&&texRec.getText()!=null&&texRec.getText().length()>300)
 				texRec.setText("");
 		}
 	}
