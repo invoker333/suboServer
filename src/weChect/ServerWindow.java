@@ -1,15 +1,15 @@
 package weChect;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JTextArea;
 import java.awt.BorderLayout;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JTextArea;
 
 public class ServerWindow {
 
@@ -55,11 +55,11 @@ public class ServerWindow {
 		textRec.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				s.sendAll("d"+e.getKeyChar());
+				s.sendAllUdp("d"+e.getKeyChar());
 			}
 			@Override
 			public void keyReleased(KeyEvent e) {
-				s.sendAll("u"+e.getKeyChar());
+				s.sendAllUdp("u"+e.getKeyChar());
 			}
 		});
 		
@@ -75,19 +75,20 @@ public class ServerWindow {
 		});
 		frame.getContentPane().add(btnSend, BorderLayout.WEST);
 
-		JButton btnConnect = new JButton("Create connect");
+		JButton btnConnect = new JButton("addRoom");
 		btnConnect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				s.connect();
+				s.addRoom();
 			}
 		});
 		frame.getContentPane().add(btnConnect, BorderLayout.EAST);
 		s = new Server(textRec, textSend);
+		s.connect();
 
-		JButton btnClosestream = new JButton("closeStream");
+		JButton btnClosestream = new JButton("reduceRoom");
 		btnClosestream.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				s.closeStream();
+				s.reduceRoom();
 			}
 		});
 		frame.getContentPane().add(btnClosestream, BorderLayout.NORTH);

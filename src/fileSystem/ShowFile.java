@@ -1,16 +1,20 @@
 package fileSystem;
 
 import java.awt.Frame;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 import javax.swing.JFileChooser;
-import javax.swing.plaf.FileChooserUI;
 
 import mySql.Log;
 
 
 public class ShowFile {
 	private static final String fileAddressOndeskTop = "C:\\Users\\Administrator\\Desktop\\onlineStage\\";
+//	private static final String fileAddressOndeskTop = "/home/onlineStages";
+
 	private static String stageFileString;
 
 	public static void main(String args[]){

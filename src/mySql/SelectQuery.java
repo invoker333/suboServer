@@ -5,9 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
-import com.mingli.toms.UserName;
+import aid.UserName;
 
 public class SelectQuery {
 	static Connection conn;
@@ -24,7 +23,8 @@ public class SelectQuery {
 		String mySqlDriverName = "com.mysql.jdbc.Driver";
 		String mySqlDbURL = "jdbc:mysql://localhost:3306/gameInfo_Toms?characterEncoding=utf8";
 		String mySqlUserName = "root";
-		String mySqlUserPwd = "";
+		String mySqlUserPwd = "root";
+//		String mySqlUserPwd = "";
 
 		try {
 			Class.forName(mySqlDriverName);
@@ -120,7 +120,7 @@ public class SelectQuery {
 
 	public static String getPaiming(int count){
 //		String sql="select top "+count+" *,rank() over(order by userScore desc) paiming from idAndName";
-		String sql="SELECT obj.userName, obj.userScore, CASE	WHEN @rowtotal = obj.userScore THEN @rownum WHEN @rowtotal := obj.userScore THEN   @rownum :=@rownum + 1 WHEN @rowtotal = 0 THEN @rownum :=@rownum + 1 END AS rownum FROM   (SELECT 	userName,	userScore	FROM	gameinfo_toms.idandname	ORDER BY	userScore DESC	) AS obj, (SELECT @rownum := 0 ,@rowtotal := NULL) r";
+		String sql="SELECT obj.userName, obj.userScore, CASE	WHEN @rowtotal = obj.userScore THEN @rownum WHEN @rowtotal := obj.userScore THEN   @rownum :=@rownum + 1 WHEN @rowtotal = 0 THEN @rownum :=@rownum + 1 END AS rownum FROM   (SELECT 	userName,	userScore	FROM	gameInfo_Toms.idAndName	ORDER BY	userScore DESC	) AS obj, (SELECT @rownum := 0 ,@rowtotal := NULL) r";
 		return get(sql);
 	}
 
@@ -175,13 +175,15 @@ public class SelectQuery {
 
 	public static int makeUserId() {
 		// TODO Auto-generated method stub
-		String sql="SELECT gameinfo_toms.idandname.userId FROM	gameinfo_toms.idandname ORDER BY	userId DESC";   
+		String sql="SELECT gameInfo_Toms.idAndName.userId FROM	gameInfo_Toms.idAndName ORDER BY	userId DESC";   
 		String res=get(sql);
 		Log.i("makeUserId"+res);
-		
-		int userId=Integer.parseInt(res.split(" ")[0])+1+(int)(10*Math.random());
+		String top1;
+		if(res==null||res=="")top1="0";
+		else top1=res.split(" ")[0];
+		int userId=Integer.parseInt(top1)+1+(int)(10*Math.random());
 		final int million=999999999;
-		if(res.split(" ")[0].length()<(""+million).length()) {
+		if(top1.length()<(""+million).length()) {
 			userId=(int) (million*Math.random());
 		}
 		Log.i("realUserId"+userId);

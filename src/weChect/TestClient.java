@@ -1,7 +1,6 @@
 package weChect;
 
 
-import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -22,6 +21,9 @@ public class TestClient implements Runnable{
 			this.taRec=taRec;
 			this.taSend=taSend;
 					
+	}
+	public  static void main(String[]args){
+		
 	}
 //	String #a=0;
 	int $$$$$$$$$$$$$$$$=0;

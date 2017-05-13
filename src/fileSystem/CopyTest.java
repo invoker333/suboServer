@@ -1,23 +1,14 @@
 package fileSystem;
 
-import java.awt.EventQueue;
-import java.awt.FileDialog;
-import java.io.*;
-import java.nio.channels.*;
-
-import javax.swing.*;
-
 import java.awt.BorderLayout;
-import java.awt.event.ActionListener;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JToolBar;
-import javax.swing.JPasswordField;
-
-import java.awt.Canvas;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 
 public class CopyTest {
 
