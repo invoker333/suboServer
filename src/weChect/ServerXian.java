@@ -3,7 +3,6 @@ package weChect;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.DatagramSocket;
 import java.net.Socket;
 
 import javax.swing.JTextArea;
@@ -11,9 +10,7 @@ import javax.swing.JTextArea;
 import mySql.Log;
 import mySql.SelectQuery;
 import mySql.User;
-import Mankind.Player;
 import aid.ConsWhenConnecting;
-import aid.UdpReceiver;
 import aid.UdpSender;
 import fileSystem.ShowFile;
 
@@ -29,28 +26,19 @@ public class ServerXian implements Runnable{
 	public boolean socketClosed;
 	Room room;
 	int userId;
+	private UdpSender udpSender;
 	
-	UdpSender udpSender;
 	
-	public ServerXian(Socket s, SelectQuery sql, RoomSet roomSet ) {
+	
+	public ServerXian(Socket s, SelectQuery sql, RoomSet roomSet ,UdpSender udpSender) {
 		this.s = s;
 		this.sql = sql;
 		this.roomSet = roomSet;
-		System.out.println("s.getInetAddress()"+s.getInetAddress().getHostAddress());
-		System.out.println("s.getRemoteSocketAddress()"+s.getRemoteSocketAddress().toString());
-		System.out.println("s.getPort"+s.getPort()+s.getLocalPort());
-		setUdpAddressPort(s.getInetAddress().getHostAddress(),s.getLocalPort());
+		this.udpSender = udpSender;
+		
 		
 		// TODO Auto-generated constructor stub
 		taRec=ServerWindow.textRec;
-	}
-	private void setUdpAddressPort(String address, final int port) {
-		// TODO Auto-generated method stub
-
-		
-		udpSender=new UdpSender();
-		udpSender.connect(address, port);
-		
 	}
 
 	@Override
@@ -129,9 +117,7 @@ public class ServerXian implements Runnable{
 		send(ConsWhenConnecting.THIS_IS_PAIMING+resStr);
 	}
 	public  void  sendUdp(String str){
-		if(udpSender!=null){
-			udpSender.send(str);
-		}
+		udpSender.send(str);
 	}
 	public void send(String str) {
 		
@@ -150,7 +136,6 @@ public class ServerXian implements Runnable{
 		// TODO Auto-generated method stub
 		if(s!=null)
 			try {
-				udpSender.closeStream();
 				s.close();
 				socketClosed=true;
 			} catch (IOException e) {

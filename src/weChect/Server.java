@@ -10,8 +10,6 @@ import java.util.Scanner;
 
 import javax.swing.JTextArea;
 
-import aid.ConsWhenConnecting;
-import aid.UdpReceiver;
 import aid.UdpSender;
 import mySql.Log;
 import mySql.SelectQuery;
@@ -24,8 +22,7 @@ public class Server implements Runnable{
 	private boolean connected;
 	SelectQuery sql=new SelectQuery();
 	private RoomSet roomSet;
-	private UdpReceiver udpReceiver;
-	private Runnable udpRunnable;
+	private UdpSender udpSender;
 
 	public static void main(String[] args) {
 		 Server s = new Server(null, null);
@@ -49,7 +46,7 @@ public class Server implements Runnable{
 	}
 	private void setUdpAddressPort( final int port) {
 		// TODO Auto-generated method stub
-		udpReceiver=new UdpReceiver(){
+		udpSender=new UdpSender(){
 			protected void handleDatagramPacket(String str) {
 //				System.out.println(str);
 //				 {
@@ -58,21 +55,16 @@ public class Server implements Runnable{
 //				}	
 			}
 		};
-		
+		DatagramSocket ds = null;
 		try {
-			final DatagramSocket ds= new DatagramSocket(8888);
-			udpRunnable=new Runnable() {
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					udpReceiver.receiveAlways(ds);
-				}
-			};
+			udpSender.startReceive(ds=new DatagramSocket(port));
 		} catch (SocketException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		 new Thread(udpRunnable).start();//udp thread
+		System.out.println("s.getInetAddress()"+ds.getInetAddress().getHostAddress());
+		System.out.println("s.getRemoteSocketAddress()"+ds.getRemoteSocketAddress().toString());
+		System.out.println("s.getPort"+ds.getPort()+ds.getLocalPort());
 	}
 
 	void connect() {
@@ -93,7 +85,7 @@ public class Server implements Runnable{
 							if(taRec!=null)taRec.append("一个用户连接了" + "\n");
 							
 							ServerXian sx;
-							sxList.add(sx=new ServerXian(s,sql,roomSet));
+							sxList.add(sx=new ServerXian(s,sql,roomSet, udpSender));
 							new Thread(sx).start();// 一个服务器接收消息会阻塞
 							// 所以多线程
 						}
