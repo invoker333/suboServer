@@ -1,6 +1,7 @@
 package weChect;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -10,6 +11,7 @@ import java.util.Scanner;
 
 import javax.swing.JTextArea;
 
+import aid.ConsWhenConnecting;
 import aid.UdpSender;
 import mySql.Log;
 import mySql.SelectQuery;
@@ -47,11 +49,12 @@ public class Server implements Runnable{
 	private void setUdpAddressPort( final int port) {
 		// TODO Auto-generated method stub
 		udpSender=new UdpSender(){
-			protected void handleDatagramPacket(String str) {
+			 protected void handleDatagramPacket(DatagramPacket dp,String str) {
 //				System.out.println(str);
 //				 {
 //					if(roomSet!=null)
-						roomSet.handleBattleMessage(str);
+						roomSet.handleBattleMessage(dp,str);
+						 if(Math.random()>0.99)Log.i(str);
 //				}	
 			}
 		};
@@ -62,9 +65,9 @@ public class Server implements Runnable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("s.getInetAddress()"+ds.getInetAddress().getHostAddress());
-		System.out.println("s.getRemoteSocketAddress()"+ds.getRemoteSocketAddress().toString());
-		System.out.println("s.getPort"+ds.getPort()+ds.getLocalPort());
+//		System.out.println("s.getInetAddress()"+ds.getInetAddress().getHostAddress());
+//		System.out.println("s.getRemoteSocketAddress()"+ds.getRemoteSocketAddress().toString());
+//		System.out.println("s.getPort"+ds.getPort()+ds.getLocalPort());
 	}
 
 	void connect() {
@@ -76,9 +79,9 @@ public class Server implements Runnable{
 			new Thread() {//serverThread
 				public void run() {
 					try {
-						int port=8888;
-						ss = new ServerSocket(port);
-						setUdpAddressPort(port);
+					
+						ss = new ServerSocket(ConsWhenConnecting.tcpPort);
+						setUdpAddressPort(ConsWhenConnecting.udpPort);
 						
 						while (true) {
 							Socket s = ss.accept();
@@ -147,11 +150,11 @@ public class Server implements Runnable{
 	}
 	public void sendAllUdp(String str) {
 		// TODO Auto-generated method stub
-		for (int i=0;i<sxList.size();i++) {
-			ServerXian ss=sxList.get(i);	
-			if(!ss.socketClosed)
-			ss.sendUdp(str);
-		}
+//		for (int i=0;i<sxList.size();i++) {
+//			ServerXian ss=sxList.get(i);	
+//			if(!ss.socketClosed)
+//			ss.sendUdp( str);
+//		}
 	}
 	void sendAll(){
 		send();

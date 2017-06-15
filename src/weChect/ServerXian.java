@@ -3,6 +3,7 @@ package weChect;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.DatagramPacket;
 import java.net.Socket;
 
 import javax.swing.JTextArea;
@@ -15,7 +16,7 @@ import aid.UdpSender;
 import fileSystem.ShowFile;
 
 public class ServerXian implements Runnable{
-	private Socket s;
+	Socket s;
 	private JTextArea taRec;
 
 	private SelectQuery sql;
@@ -102,6 +103,11 @@ public class ServerXian implements Runnable{
 				}else if(str.startsWith(ConsWhenConnecting.USE_ITEM)) {
 					roomSet.sendAllTcp(str);
 				}
+				else if(str.startsWith(ConsWhenConnecting.DIE)) {
+					roomSet.sendAllTcp(str);
+				}else {// all broadcast
+					roomSet.sendAllTcp(str);
+				}
 				
 			}
 		} catch (IOException e) {
@@ -116,8 +122,8 @@ public class ServerXian implements Runnable{
 		Log.i("serverLog+sql.getPaiming(20)"+resStr);
 		send(ConsWhenConnecting.THIS_IS_PAIMING+resStr);
 	}
-	public  void  sendUdp(String str){
-		udpSender.send(str);
+	public  void  sendUdp(DatagramPacket dp, String str){
+		udpSender.sendReply(dp,str);
 	}
 	public void send(String str) {
 		

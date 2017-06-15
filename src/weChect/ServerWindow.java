@@ -55,11 +55,13 @@ public class ServerWindow {
 		textRec.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				s.sendAllUdp("d"+e.getKeyChar());
+				s.sendAll("d"+e.getKeyChar());
+//				s.sendAllUdp("d"+e.getKeyChar());
 			}
 			@Override
 			public void keyReleased(KeyEvent e) {
-				s.sendAllUdp("u"+e.getKeyChar());
+//				s.sendAllUdp("u"+e.getKeyChar());
+				s.sendAll("u"+e.getKeyChar());
 			}
 		});
 		

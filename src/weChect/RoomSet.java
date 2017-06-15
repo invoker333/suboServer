@@ -1,5 +1,6 @@
 package weChect;
 
+import java.net.DatagramPacket;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -68,7 +69,7 @@ public class RoomSet {
 			room.checkSocketClosed();
 		}
 	}
-	public void handleBattleMessage(String str) {
+	public void handleBattleMessage(DatagramPacket dp, String str) {
 		// TODO Auto-generated method stub
 		if(str.startsWith(ConsWhenConnecting.THIS_IS_BATTLE_MESSAGE)){
 			String[] strArr = (str.substring(ConsWhenConnecting.THIS_IS_BATTLE_MESSAGE.length())).split(" ");
@@ -76,7 +77,7 @@ public class RoomSet {
 			int userId=Integer.parseInt(strArr[0]);
 			for(Room r:roomList){
 				if(r.roomId==roomId){
-					r.handleBattleMessage(userId, str);
+					r.handleBattleMessage(dp,userId, str);
 				}
 			}
 		}

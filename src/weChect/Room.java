@@ -1,5 +1,6 @@
 package weChect;
 
+import java.net.DatagramPacket;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -78,7 +79,7 @@ public class Room {
 		for (ServerXian sx : sxList) {
 			if(sx.userId==userId){
 				sx.send(ConsWhenConnecting.THIS_IS_THE_SELECTED_ONLINE_STAGE
-						+ ShowFile.getSelectedFileString("battle.txt"));
+						+ ShowFile.getSelectedBattleFileString("battle.txt"));
 			}
 			
 		}
@@ -86,8 +87,8 @@ public class Room {
 		gameStarted = true;
 	}
 	LinkedList<BattleMes2> battleMesList=new LinkedList<BattleMes2>();
-	public  void handleBattleMessage(int userId, String strRes) {
-		battleMesList.offer(new BattleMes2(userId, strRes));
+	public  void handleBattleMessage(DatagramPacket dp, int userId, String strRes) {
+		battleMesList.offer(new BattleMes2(dp,userId, strRes));
 	}
 
 	public void sendBattleMessage() {
@@ -99,7 +100,7 @@ public class Room {
 				int userId=bm.userId;
 				String strRes=bm.mes;
 				if (r.userId != userId) {
-					r.sendUdp(strRes);
+					r.sendUdp(bm.dp,strRes);
 				}
 			}
 		}
@@ -111,6 +112,7 @@ public class Room {
 	public void sendAllTcp(String str) {
 		// TODO Auto-generated method stub
 		for(ServerXian sx:sxList){
+			if(!sx.s.isClosed())
 			sx.send(str);
 		}
 	}
@@ -118,7 +120,9 @@ public class Room {
 class BattleMes2{
 	int userId;
 	String mes;
-	public BattleMes2(int userId,	String mes) {
+	 DatagramPacket dp;
+	public BattleMes2(DatagramPacket dp, int userId,	String mes) {
+		this.dp = dp;
 		this.userId = userId;
 		this.mes = mes;
 	}

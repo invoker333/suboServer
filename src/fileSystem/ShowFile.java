@@ -13,6 +13,7 @@ import mySql.Log;
 
 public class ShowFile {
 	private static final String fileAddressOndeskTop = "C:\\Users\\Administrator\\Desktop\\onlineStage\\";
+	private static final String battleFileAddressOndeskTop = "C:\\Users\\Administrator\\Desktop\\battleStage\\";
 //	private static final String fileAddressOndeskTop = "/home/onlineStages";
 
 	private static String stageFileString;
@@ -54,9 +55,12 @@ public class ShowFile {
 	}
 
 	public static String getSelectedFileString(String title) {
+		return getFileString(fileAddressOndeskTop,title);
+	}
+	public static String getFileString(String path,String title) {
 		// TODO Auto-generated method stub
 		String selectedString ="";
-		File f=new File(fileAddressOndeskTop,title);
+		File f=new File(path,title);
 		BufferedReader br = null;
 		 try {
 			br = new BufferedReader(new FileReader(f));
@@ -71,5 +75,11 @@ public class ShowFile {
 			e.printStackTrace();
 		}
 		return selectedString;
+	}
+
+	public static String getSelectedBattleFileString(String title) {
+		// TODO Auto-generated method stub
+		return getFileString(battleFileAddressOndeskTop,title);
+		
 	}
 }
